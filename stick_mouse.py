@@ -1,7 +1,7 @@
 """
 FreePIE script for mouse cursor control with gamepad stick.
-Specifically: right stick x axis for semi-absolute mouse cursor control.
-Can be modified for any analog axis for absolute or relative movement.
+Can be modified for any available axis for semi-absolute or relative movement.
+Currently configured for right stick x axis = semi-absolute x movement.
 2020-03-02 JAO
 
 (!) FreePIE scripts are automatically looped as fast as possible; too fast.
@@ -25,7 +25,7 @@ if starting:
 def main_abs_mode():
 	"""Semi-absolute mode: stick deflection sets mouse cursor position.
 	Is only semi because "origin" is based on cursor position, not screen.
-	Mouse cursor will return to "origin" when stick springs back to center.
+	Mouse cursor will return to "origin" when stick returns to center.
 	"""
 	jrx_in = joystick[j_id].xRotation
 	jrx_delta = filters.delta(jrx_in)
@@ -34,7 +34,7 @@ def main_abs_mode():
 
 def main_rel_mode():
 	"""Relative mode: stick deflection sets mouse cursor speed.
-	Mouse cursor speed will return to zero when stick springs back to center.
+	Mouse cursor speed will return to zero when stick returns to center.
 	"""
 	jrx_in = joystick[j_id].xRotation
 	jrx_map = filters.mapRange(jrx_in, -1000, 1000, -jrx_sens, jrx_sens)
