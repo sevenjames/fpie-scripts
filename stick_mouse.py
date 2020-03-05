@@ -21,8 +21,9 @@ if starting:
 	jrx_dead = 3 # dead zone for relative mode to prevent drifting
 
 def main_abs_mode():
-	# absolute mode: stick deflection sets mouse cursor position
-	# mouse cursor will return to center when stick springs back to center
+	# semi-absolute mode: stick deflection sets mouse cursor position
+	# is only semi because "origin" is based on cursor position, not screen
+	# mouse cursor will return to "origin" when stick springs back to center
 	jrx_in = joystick[j_id].xRotation
 	jrx_delta = filters.delta(jrx_in)
 	jrx_out = jrx_delta * jrx_mult
@@ -37,8 +38,5 @@ def main_rel_mode():
 	mouse.deltaX = jrx_out
 
 frame_start = time.time()
-if True: # only use one mode at a time
-	main_abs_mode()
-else:
-	main_rel_mode()
+main_abs_mode() # only run one mode at a time
 time.sleep(max(1./60 - (time.time() - frame_start), 0))
