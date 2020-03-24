@@ -18,7 +18,7 @@ if starting:
 	"""This section only runs once."""
 	import time
 	j_id = 0 # gamepad device number
-	jrx_mult = 0.45 # movement range for absolute mode
+	jrx_mult = 0.55 # movement range for absolute mode
 	jrx_sens = 50 # sensitivity for relative mode
 	jrx_dead = 3 # dead zone for relative mode to prevent drifting
 
