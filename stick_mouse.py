@@ -18,7 +18,7 @@ if starting:
 	"""This section only runs once."""
 	import time
 	j_id = 0 # gamepad device number
-	jrx_mult = 0.65 # movement range for absolute mode.
+	jrx_mult = 0.25 # movement range for absolute mode.
 	# set to around 0.65 for looking left-right in car, 1.00 for looking back while on bike. TODO: make this toggleable with another input?
 	jrx_sens = 50 # sensitivity for relative mode
 	jrx_dead = 3 # dead zone for relative mode to prevent drifting
