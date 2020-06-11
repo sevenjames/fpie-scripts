@@ -15,11 +15,11 @@ left trigger = +z axis, right trigger = -z axis
 
 if starting:
     """This block only runs once."""
-	import time
-	joy_id = 0 # gamepad device number
-	x_axis_mult = 0.25 # pos mode movement multiplier
-	x_axis_sens = 50 #  spd mode sensitivity
-	x_axis_dead = 3 # spd mode dead zone to prevent drifting
+    import time
+    joy_id = 0 # gamepad device number
+    x_axis_mult = 0.25 # pos mode movement multiplier
+    x_axis_sens = 50 #  spd mode sensitivity
+    x_axis_dead = 3 # spd mode dead zone to prevent drifting
 
 def axis_to_mouse_pos(axis):
     """Position Mode. Stick deflection sets relative mouse cursor position."""
