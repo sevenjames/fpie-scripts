@@ -1,47 +1,37 @@
 """
-FreePIE script for mouse cursor control with gamepad stick.
-Can be modified for any available axis for semi-absolute or relative movement.
-Currently configured for right stick x axis = semi-absolute x movement.
-2020-03-02 JAO
+Script to control mouse cursor with gamepad stick.
+Requires FreePIE: https://github.com/AndersMalmgren/FreePIE
+Currently configured for right stick x axis control of mouse x position.
+2020-06-11 JAO
 
-(!) FreePIE scripts are automatically looped as fast as possible; too fast.
-This is managed with a "starting" block and a frame limit timer.
-See documentation here: https://github.com/AndersMalmgren/FreePIE
+FreePIE scripts automatically loop too fast.
+This is managed with a "starting" block and a frame limiter.
 
-inputs reference for gamepad : Logitech F310
-left stick LR = X axis, left stick UD = Y axis
-right stick LR = X rotation, right stick UD = Y rotation
-left trigger = +Z axis, right trigger = -Z axis
+Inputs reference for Logitech F310 gamepad:
+left stick LR = x axis, left stick UD = y axis
+right stick LR = x rotation, right stick UD = y rotation
+left trigger = +z axis, right trigger = -z axis
 """
 
 if starting:
-	"""This section only runs once."""
+    """This block only runs once."""
 	import time
-	j_id = 0 # gamepad device number
-	jrx_mult = 0.25 # movement range for absolute mode.
-	# set to around 0.65 for looking left-right in car, 1.00 for looking back while on bike. TODO: make this toggleable with another input?
-	jrx_sens = 50 # sensitivity for relative mode
-	jrx_dead = 3 # dead zone for relative mode to prevent drifting
+	joy_id = 0 # gamepad device number
+	x_axis_mult = 0.25 # pos mode movement multiplier
+	x_axis_sens = 50 #  spd mode sensitivity
+	x_axis_dead = 3 # spd mode dead zone to prevent drifting
 
-def main_abs_mode():
-	"""Semi-absolute mode: stick deflection sets mouse cursor position.
-	Is only semi because "origin" is based on cursor position, not screen.
-	Mouse cursor will return to "origin" when stick returns to center.
-	"""
-	jrx_in = joystick[j_id].xRotation
-	jrx_delta = filters.delta(jrx_in)
-	jrx_out = jrx_delta * jrx_mult
-	mouse.deltaX = jrx_out
+def axis_to_mouse_pos(axis):
+    """Position Mode. Stick deflection sets relative mouse cursor position."""
+    return filters.delta(axis) * x_axis_mult
 
-def main_rel_mode():
-	"""Relative mode: stick deflection sets mouse cursor speed.
-	Mouse cursor speed will return to zero when stick returns to center.
-	"""
-	jrx_in = joystick[j_id].xRotation
-	jrx_map = filters.mapRange(jrx_in, -1000, 1000, -jrx_sens, jrx_sens)
-	jrx_out = filters.deadband(jrx_map, jrx_dead)
-	mouse.deltaX = jrx_out
+def axis_to_mouse_spd(axis):
+    """Speed Mode. Stick deflection sets mouse cursor movement speed."""
+    output = filters.mapRange(axis, -1000, 1000, -x_axis_sens, x_axis_sens)
+    output = filters.deadband(output, x_axis_dead)
+    return output
 
-frame_start = time.time()
-main_abs_mode() # only run one mode at a time
-time.sleep(max(1./60 - (time.time() - frame_start), 0))
+frame_start = time.time() # setup frame limiter
+#Only call one of the two binding functions here:
+mouse.deltaX = axis_to_mouse_pos(axis=joystick[joy_id].xRotation)
+time.sleep(max(1./60 - (time.time() - frame_start), 0)) # frame limiter
